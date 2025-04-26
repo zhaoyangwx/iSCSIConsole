@@ -178,6 +178,7 @@ namespace ISCSIConsole
             this.btnAddSPTIDevice.TabIndex = 10;
             this.btnAddSPTIDevice.Text = "Add SPTI Device";
             this.btnAddSPTIDevice.UseVisualStyleBackColor = true;
+            this.btnAddSPTIDevice.Visible = false;
             this.btnAddSPTIDevice.Click += new System.EventHandler(this.btnAddSPTIDevice_Click);
             // 
             // AddTargetForm
