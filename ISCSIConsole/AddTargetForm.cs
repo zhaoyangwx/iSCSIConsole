@@ -29,10 +29,12 @@ namespace ISCSIConsole
             {
                 btnAddPhysicalDisk.Visible = true;
                 btnAddVolume.Visible = true;
+                btnAddSPTIDevice.Visible = true;
                 if (!SecurityHelper.IsAdministrator())
                 {
                     btnAddPhysicalDisk.Enabled = false;
                     btnAddVolume.Enabled = false;
+                    btnAddSPTIDevice.Enabled = false;
                 }
             }
         }
