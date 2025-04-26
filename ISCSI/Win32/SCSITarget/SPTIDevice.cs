@@ -14,7 +14,10 @@ namespace ISCSIConsole
         public SPTIDevice(string path)
         {
             this.path = path;
-            device= new SPTITarget(path);
+            device= new SPTITarget(path, true);
+            byte[] cdb = { (byte)SCSI.SCSIOpCodeName.ReportLUNs, 0, 0, 0, 0, 0 }; 
+            byte[] response;
+            device.ExecuteCommand(cdb, 0, null, out response); 
         }
 
         public override byte[] ReadSectors(long sectorIndex, int sectorCount)
