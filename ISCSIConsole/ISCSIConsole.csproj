@@ -10,6 +10,7 @@
     <ApplicationIcon>Icons\SCSI.ico</ApplicationIcon>
     <Authors>Tal Aloni</Authors>
     <Copyright>Copyright © Tal Aloni 2012-2024</Copyright>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">

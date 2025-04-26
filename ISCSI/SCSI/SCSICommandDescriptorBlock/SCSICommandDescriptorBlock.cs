@@ -74,10 +74,32 @@ namespace SCSI
                 case SCSIOpCodeName.ReportLUNs:
                     return new SCSICommandDescriptorBlock12(buffer, offset);
                 default:
-                    throw new UnsupportedSCSICommandException(String.Format("Unknown SCSI command: 0x{0}", opCode.ToString("x")));
+                    if (offset==0)
+                    {
+                        return SCSICommandDescriptorBlock.FromBytes(buffer);
+                    }
+                    else
+                    {
+                        throw new UnsupportedSCSICommandException(String.Format("Unknown SCSI command: 0x{0}", opCode.ToString("x")));
+                    }
+                }
+        }
+        public static SCSICommandDescriptorBlock FromBytes(byte[] buffer)
+        {
+            switch (buffer.Length)
+                {
+                case 6:
+                    return new SCSICommandDescriptorBlock6(buffer, 0);
+                case 10:
+                    return new SCSICommandDescriptorBlock10(buffer, 0);
+                case 12:
+                    return new SCSICommandDescriptorBlock12(buffer, 0);
+                case 16:
+                    return new SCSICommandDescriptorBlock16(buffer, 0);
+                default:
+                    throw new UnsupportedSCSICommandException(String.Format("Unknown SCSI command length {0}", buffer.Length));
             }
         }
-
         public static SCSICommandDescriptorBlock Create(SCSIOpCodeName opCode)
         {
             switch (opCode)

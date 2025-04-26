@@ -73,7 +73,7 @@ namespace SCSI.Win32
                     response = parameter.GetBytes();
                     if (m_logicalUnitManager.FindLogicalUnit(0) == null)
                     {
-                        m_logicalUnitManager.AddLogicalUnit(new LogicalUnit());
+                        m_logicalUnitManager.AddLogicalUnit(new LogicalUnit() { BlockSize=16777216});
                     }
                     return SCSIStatusCodeName.Good;
                 }
@@ -145,35 +145,44 @@ namespace SCSI.Win32
                             response = new byte[0];
                         }
                         Log(Severity.Verbose, "SCSI Status: {0}, Response Length: {1}", status, response.Length);
+                        try
+                        {
+                            if (commandBytes[0] == (byte)SCSIOpCodeName.Inquiry)
+                            {
+                                InterceptInquiry(logicalUnit, commandBytes, response);
+                            }
+                            else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSelect6)
+                            {
+                                InterceptModeSelect6(logicalUnit, commandBytes, data);
+                            }
+                            else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSense6)
+                            {
+                                InterceptModeSense6(logicalUnit, commandBytes, response);
+                            }
+                            else if (commandBytes[0] == (byte)SCSIOpCodeName.ReadCapacity10)
+                            {
+                                InterceptReadCapacity10(logicalUnit, commandBytes, response);
+                            }
+                            else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSelect10)
+                            {
+                                InterceptModeSelect10(logicalUnit, commandBytes, data);
+                            }
+                            else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSense10)
+                            {
+                                InterceptModeSense10(logicalUnit, commandBytes, response);
+                            }
+                            else if (commandBytes[0] == (byte)SCSIOpCodeName.ServiceActionIn16 && commandBytes[1] == (byte)ServiceAction.ReadCapacity16)
+                            {
+                                InterceptReadCapacity16(logicalUnit, commandBytes, response);
+                            }
+                        }
+                        catch
+                        {
+                            Log(Severity.Warning, "Unrecognized result.", status);
+                        }
 
-                        if (commandBytes[0] == (byte)SCSIOpCodeName.Inquiry)
-                        {
-                            InterceptInquiry(logicalUnit, commandBytes, response);
-                        }
-                        else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSelect6)
-                        {
-                            InterceptModeSelect6(logicalUnit, commandBytes, data);
-                        }
-                        else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSense6)
-                        {
-                            InterceptModeSense6(logicalUnit, commandBytes, response);
-                        }
-                        else if (commandBytes[0] == (byte)SCSIOpCodeName.ReadCapacity10)
-                        {
-                            InterceptReadCapacity10(logicalUnit, commandBytes, response);
-                        }
-                        else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSelect10)
-                        {
-                            InterceptModeSelect10(logicalUnit, commandBytes, data);
-                        }
-                        else if (commandBytes[0] == (byte)SCSIOpCodeName.ModeSense10)
-                        {
-                            InterceptModeSense10(logicalUnit, commandBytes, response);
-                        }
-                        else if (commandBytes[0] == (byte)SCSIOpCodeName.ServiceActionIn16 && commandBytes[1] == (byte)ServiceAction.ReadCapacity16)
-                        {
-                            InterceptReadCapacity16(logicalUnit, commandBytes, response);
-                        }
+
+                        
                     }
                     else
                     {

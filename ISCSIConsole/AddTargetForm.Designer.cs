@@ -37,8 +37,8 @@ namespace ISCSIConsole
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.listDisks = new System.Windows.Forms.ListView();
-            this.columnDescription = new System.Windows.Forms.ColumnHeader();
-            this.columnSize = new System.Windows.Forms.ColumnHeader();
+            this.columnDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnAddVolume = new System.Windows.Forms.Button();
             this.btnCreateDiskImage = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
@@ -70,7 +70,7 @@ namespace ISCSIConsole
             // 
             this.txtTargetIQN.Location = new System.Drawing.Point(57, 12);
             this.txtTargetIQN.Name = "txtTargetIQN";
-            this.txtTargetIQN.Size = new System.Drawing.Size(275, 20);
+            this.txtTargetIQN.Size = new System.Drawing.Size(275, 21);
             this.txtTargetIQN.TabIndex = 1;
             // 
             // label1
@@ -78,7 +78,7 @@ namespace ISCSIConsole
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
+            this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 4;
             this.label1.Text = "IQN:";
             // 
@@ -87,13 +87,13 @@ namespace ISCSIConsole
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 51);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 6;
             this.label2.Text = "Disks:";
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(324, 200);
+            this.btnOK.Location = new System.Drawing.Point(324, 226);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 8;
@@ -104,7 +104,7 @@ namespace ISCSIConsole
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(405, 200);
+            this.btnCancel.Location = new System.Drawing.Point(405, 226);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -126,8 +126,8 @@ namespace ISCSIConsole
             this.listDisks.TabIndex = 2;
             this.listDisks.UseCompatibleStateImageBehavior = false;
             this.listDisks.View = System.Windows.Forms.View.Details;
-            this.listDisks.SelectedIndexChanged += new System.EventHandler(this.listDisks_SelectedIndexChanged);
             this.listDisks.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.listDisks_ColumnWidthChanging);
+            this.listDisks.SelectedIndexChanged += new System.EventHandler(this.listDisks_SelectedIndexChanged);
             // 
             // columnDescription
             // 
@@ -209,10 +209,10 @@ namespace ISCSIConsole
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Add iSCSI Target";
             this.Deactivate += new System.EventHandler(this.AddTargetForm_Deactivate);
-            this.Load += new System.EventHandler(this.AddTargetForm_Load);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AddTargetForm_KeyUp);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AddTargetForm_FormClosing);
+            this.Load += new System.EventHandler(this.AddTargetForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddTargetForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AddTargetForm_KeyUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 
