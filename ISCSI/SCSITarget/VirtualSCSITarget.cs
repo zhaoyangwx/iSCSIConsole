@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using DiskAccessLibrary;
 using ISCSI.Logging;
+using ISCSIConsole;
+using SCSI.Win32;
 using Utilities;
 
 namespace SCSI
@@ -60,6 +62,10 @@ namespace SCSI
                 Log(Severity.Warning, "Initiator error: tried to execute command on LUN {0} which does not exist", lun);
                 response = FormatSenseData(SenseDataParameter.GetIllegalRequestInvalidLUNSenseData());
                 return SCSIStatusCodeName.CheckCondition;
+            }
+            else if (m_disks[lun] is SPTIDevice)
+            {
+                return ((SPTIDevice)m_disks[lun]).SCSIDirect(command, lun, data, out response);
             }
             else if (command.OpCode == SCSIOpCodeName.TestUnitReady)
             {

@@ -8,6 +8,8 @@ using System.Windows.Forms;
 using DiskAccessLibrary;
 using DiskAccessLibrary.Win32;
 using ISCSI.Server;
+using ISCSIConsole.Win32;
+using SCSI.Win32;
 using Utilities;
 
 namespace ISCSIConsole
@@ -95,6 +97,16 @@ namespace ISCSIConsole
                 AddDisk(volumeDisk);
             }
         }
+        private void btnAddSPTIDevice_Click(object sender, EventArgs e)
+        {
+            SelectSPTIDevice selectSPTIDevice = new SelectSPTIDevice();
+            DialogResult result= selectSPTIDevice.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                SPTIDevice sptiDevice = new SPTIDevice(selectSPTIDevice.Path);
+                AddDisk(sptiDevice);
+            }
+        }
 
         private void AddDisk(Disk disk)
         {
@@ -116,8 +128,12 @@ namespace ISCSIConsole
             {
                 description = String.Format("Volume");
             }
+            else if (disk is SPTIDevice) // Win32 only
+            {
+                description = String.Format("SPTITarget");
+            }
 
-            ListViewItem item = new ListViewItem(description);
+                ListViewItem item = new ListViewItem(description);
             item.SubItems.Add(sizeString);
             listDisks.Items.Add(item);
             m_disks.Add(disk);
@@ -197,5 +213,6 @@ namespace ISCSIConsole
         {
             btnCreateDiskImage.Text = "Create Virtual Disk";
         }
+
     }
 }

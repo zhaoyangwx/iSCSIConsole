@@ -42,6 +42,7 @@ namespace ISCSIConsole
             this.btnAddVolume = new System.Windows.Forms.Button();
             this.btnCreateDiskImage = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.btnAddSPTIDevice = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnAddDiskImage
@@ -117,10 +118,11 @@ namespace ISCSIConsole
             this.columnDescription,
             this.columnSize});
             this.listDisks.FullRowSelect = true;
+            this.listDisks.HideSelection = false;
             this.listDisks.Location = new System.Drawing.Point(57, 44);
             this.listDisks.MultiSelect = false;
             this.listDisks.Name = "listDisks";
-            this.listDisks.Size = new System.Drawing.Size(275, 139);
+            this.listDisks.Size = new System.Drawing.Size(275, 168);
             this.listDisks.TabIndex = 2;
             this.listDisks.UseCompatibleStateImageBehavior = false;
             this.listDisks.View = System.Windows.Forms.View.Details;
@@ -160,7 +162,7 @@ namespace ISCSIConsole
             // btnRemove
             // 
             this.btnRemove.Enabled = false;
-            this.btnRemove.Location = new System.Drawing.Point(340, 160);
+            this.btnRemove.Location = new System.Drawing.Point(340, 189);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(140, 23);
             this.btnRemove.TabIndex = 7;
@@ -168,12 +170,23 @@ namespace ISCSIConsole
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
+            // btnAddSPTIDevice
+            // 
+            this.btnAddSPTIDevice.Location = new System.Drawing.Point(340, 160);
+            this.btnAddSPTIDevice.Name = "btnAddSPTIDevice";
+            this.btnAddSPTIDevice.Size = new System.Drawing.Size(140, 23);
+            this.btnAddSPTIDevice.TabIndex = 10;
+            this.btnAddSPTIDevice.Text = "Add SPTI Device";
+            this.btnAddSPTIDevice.UseVisualStyleBackColor = true;
+            this.btnAddSPTIDevice.Click += new System.EventHandler(this.btnAddSPTIDevice_Click);
+            // 
             // AddTargetForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(494, 235);
+            this.ClientSize = new System.Drawing.Size(484, 261);
+            this.Controls.Add(this.btnAddSPTIDevice);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnCreateDiskImage);
             this.Controls.Add(this.btnAddVolume);
@@ -189,8 +202,8 @@ namespace ISCSIConsole
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(500, 260);
-            this.MinimumSize = new System.Drawing.Size(500, 260);
+            this.MaximumSize = new System.Drawing.Size(500, 300);
+            this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "AddTargetForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Add iSCSI Target";
@@ -219,5 +232,6 @@ namespace ISCSIConsole
         private System.Windows.Forms.Button btnAddVolume;
         private System.Windows.Forms.Button btnCreateDiskImage;
         private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnAddSPTIDevice;
     }
 }
