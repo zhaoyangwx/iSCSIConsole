@@ -108,7 +108,7 @@ namespace SCSI.Win32
 
             // Forward SCSI command to target
             SCSIStatusCodeName status;
-            if (!DeviceIoControl(m_handle, IOCTL_SCSI_PASS_THROUGH_DIRECT, inBuffer, size, IntPtr.Zero, 0, out bytesReturned, IntPtr.Zero))
+            if (!DeviceIoControl(m_handle, IOCTL_SCSI_PASS_THROUGH_DIRECT, inBuffer, size, inBuffer, size, out bytesReturned, IntPtr.Zero))
             {
                 // Notes:
                 // 1. DeviceIoControl will return ERROR_INVALID_HANDLE under Windows Vista or later if not running as administrator.
