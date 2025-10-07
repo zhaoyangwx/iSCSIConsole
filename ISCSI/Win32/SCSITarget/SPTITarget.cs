@@ -127,9 +127,10 @@ namespace SCSI.Win32
                 if (status != SCSIStatusCodeName.Good)
                 {
                     Log(Severity.Verbose, "SCSI Status: {0}, Sense: {1}", status, BitConverter.ToString(scsi.Sense));
-                    response = new byte[scsi.Sense.Length + 2];
+                    response = new byte[scsi.Sense.Length + 2 + scsi.Spt.DataTransferLength];
                     BigEndianWriter.WriteUInt16(response, 0, (ushort)scsi.Sense.Length);
                     ByteWriter.WriteBytes(response, 2, scsi.Sense);
+                    if (scsi.Spt.DataTransferLength > 0)  Marshal.Copy(scsi.Spt.DataBuffer, response, scsi.Sense.Length + 2, (int)scsi.Spt.DataTransferLength);
                 }
                 else
                 {

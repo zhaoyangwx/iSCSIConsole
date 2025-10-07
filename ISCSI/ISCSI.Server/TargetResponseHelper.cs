@@ -155,15 +155,59 @@ namespace ISCSI.Server
             if (!command.Read || status != SCSIStatusCodeName.Good)
             {
                 // RFC 3720: if the command is completed with an error, then the response and sense data MUST be sent in a SCSI Response PDU
-                SCSIResponsePDU response = new SCSIResponsePDU();
-                response.InitiatorTaskTag = command.InitiatorTaskTag;
-                response.Status = status;
-                response.Data = scsiResponse;
-                if (command.Read)
+                // we have to split the response to multiple Data-In PDUs and one SCSI Response PDU
+                int ofs = 0;
+                long residualLen = scsiResponse.Length - command.ExpectedDataTransferLength;
+
+                ushort senseLen = 0;
+                if (residualLen >= 2) 
                 {
-                    EnforceExpectedDataTransferLength(response, command.ExpectedDataTransferLength);
+                    senseLen = BigEndianReader.ReadUInt16(scsiResponse, ref ofs);
+                    senseLen = (ushort)Math.Min(senseLen, residualLen - 2);
                 }
-                responseList.Add(response);
+                byte[] sense=new byte[senseLen+2];
+                if (residualLen >= 2)
+                {
+                    BigEndianWriter.WriteUInt16(sense, 0, senseLen); 
+                    Array.Copy(scsiResponse, 2, sense, 2, senseLen);
+                }
+               
+                byte[] responseData = new byte[scsiResponse.Length - residualLen];
+                Array.Copy(scsiResponse, residualLen, responseData, 0, responseData.Length);
+
+                int bytesLeftToSend = responseData.Length;
+
+                uint dataSN = 0;
+                while (bytesLeftToSend > 0)
+                {
+                    int dataSegmentLength = Math.Min(connection.InitiatorMaxRecvDataSegmentLength, bytesLeftToSend);
+                    int dataOffset = responseData.Length - bytesLeftToSend;
+
+                    SCSIDataInPDU response = new SCSIDataInPDU();
+                    response.InitiatorTaskTag = command.InitiatorTaskTag;
+                    if (bytesLeftToSend == dataSegmentLength)
+                    {
+                        // last Data-In PDU
+                        //response.Status = status;
+                        response.StatusPresent = false;
+                        //response.Final = true;
+                    }
+                    response.BufferOffset = (uint)dataOffset;
+                    response.DataSN = dataSN;
+                    dataSN++;
+
+                    response.Data = new byte[dataSegmentLength];
+                    Array.Copy(responseData, dataOffset, response.Data, 0, dataSegmentLength);
+                    responseList.Add(response);
+
+                    bytesLeftToSend -= dataSegmentLength;
+                }
+
+                SCSIResponsePDU response2 = new SCSIResponsePDU();
+                response2.InitiatorTaskTag = command.InitiatorTaskTag;
+                response2.Status = status;
+                response2.Data = sense;
+                responseList.Add(response2);           
             }
             else if (scsiResponse.Length <= connection.InitiatorMaxRecvDataSegmentLength)
             {
