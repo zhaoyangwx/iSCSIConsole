@@ -10,7 +10,6 @@ using System.IO;
 using DiskAccessLibrary;
 using ISCSI.Logging;
 using ISCSIConsole;
-using SCSI.Win32;
 using Utilities;
 
 namespace SCSI

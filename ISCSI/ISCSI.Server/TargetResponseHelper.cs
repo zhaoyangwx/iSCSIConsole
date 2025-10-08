@@ -158,7 +158,7 @@ namespace ISCSI.Server
                 // we have to split the response to multiple Data-In PDUs and one SCSI Response PDU
                 int ofs = 0;
                 long residualLen = scsiResponse.Length - command.ExpectedDataTransferLength;
-
+                residualLen = Math.Max(0, residualLen);
                 ushort senseLen = 0;
                 if (residualLen >= 2) 
                 {
@@ -171,9 +171,12 @@ namespace ISCSI.Server
                     BigEndianWriter.WriteUInt16(sense, 0, senseLen); 
                     Array.Copy(scsiResponse, 2, sense, 2, senseLen);
                 }
-               
+                
                 byte[] responseData = new byte[scsiResponse.Length - residualLen];
-                Array.Copy(scsiResponse, residualLen, responseData, 0, responseData.Length);
+                if (responseData.Length>0)
+                {
+                    Array.Copy(scsiResponse, residualLen, responseData, 0, responseData.Length);
+                }
 
                 int bytesLeftToSend = responseData.Length;
 
@@ -202,11 +205,13 @@ namespace ISCSI.Server
 
                     bytesLeftToSend -= dataSegmentLength;
                 }
-
+                
                 SCSIResponsePDU response2 = new SCSIResponsePDU();
                 response2.InitiatorTaskTag = command.InitiatorTaskTag;
                 response2.Status = status;
                 response2.Data = sense;
+                if (responseData.Length < command.ExpectedDataTransferLength) { EnforceExpectedDataTransferLength(response2, command.ExpectedDataTransferLength); }
+
                 responseList.Add(response2);           
             }
             else if (scsiResponse.Length <= connection.InitiatorMaxRecvDataSegmentLength)
